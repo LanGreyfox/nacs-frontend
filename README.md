@@ -23,6 +23,31 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 
 See [Vite Configuration Reference](https://vite.dev/config/).
 
+## Environment Variables
+
+Environment-specific configuration is provided via Vite [env files and modes](https://vite.dev/guide/env-and-mode). Only variables prefixed with `VITE_` are exposed to the client bundle.
+
+| File | Loaded when | Committed |
+| --- | --- | --- |
+| `.env.development` | `npm run dev` | yes |
+| `.env.production` | `npm run build` / `npm run preview` | yes |
+| `.env.development.local` / `.env.production.local` | same mode, overrides the above | no (gitignored) |
+| `.env.example` | template documenting all variables | yes |
+
+Available variables:
+
+- `VITE_API_BASE_URL` (required): base URL of the backend API, e.g. `http://localhost:8080`.
+
+Access variables in code only through the typed config module, never via `import.meta.env` directly:
+
+```ts
+import { env } from '@/config/env'
+
+const response = await fetch(`${env.apiBaseUrl}/health`)
+```
+
+Missing or empty required variables throw an error at app startup. Local overrides and secrets belong in `.env.*.local` files, which are gitignored.
+
 ## Project Setup
 
 ```sh
