@@ -1,27 +1,17 @@
-# nacs-scaffold
+# NACS Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend for the **Network Attached Client Storage (NACS)** — a single-page application built with Vue 3, Vite and TypeScript. It communicates with the NACS backend API, whose base URL is provided via environment variables (see below).
+
+## Tech Stack
+
+- [Vue 3](https://vuejs.org/) + [Vue Router](https://router.vuejs.org/) + [Pinia](https://pinia.vuejs.org/)
+- [Vite](https://vite.dev/) + [TypeScript](https://www.typescriptlang.org/) (type checking via `vue-tsc`)
+- Unit tests with [Vitest](https://vitest.dev/), end-to-end tests with [Playwright](https://playwright.dev)
+- Linting with [oxlint](https://oxc.rs/docs/guide/usage/linter.html) + [ESLint](https://eslint.org/), formatting with [Prettier](https://prettier.io/)
 
 ## Recommended IDE Setup
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (disable Vetur if installed). TypeScript cannot handle type information for `.vue` imports by default, so Volar makes the editor's language service aware of `.vue` types, while `vue-tsc` (`npm run type-check`) is used for type checking on the CLI.
 
 ## Environment Variables
 
@@ -36,7 +26,7 @@ Environment-specific configuration is provided via Vite [env files and modes](ht
 
 Available variables:
 
-- `VITE_API_BASE_URL` (required): base URL of the backend API, e.g. `http://localhost:8080`.
+- `VITE_API_BASE_URL` (required): base URL of the NACS backend API. Local development points to `http://10.0.0.178:3000` (see `.env.development`).
 
 Access variables in code only through the typed config module, never via `import.meta.env` directly:
 
@@ -66,6 +56,12 @@ npm run dev
 npm run build
 ```
 
+### Type-Check Only
+
+```sh
+npm run type-check
+```
+
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
 
 ```sh
@@ -86,13 +82,19 @@ npm run test:e2e
 # Runs the tests only on Chromium
 npm run test:e2e -- --project=chromium
 # Runs the tests of a specific file
-npm run test:e2e -- tests/example.spec.ts
+npm run test:e2e -- e2e/vue.spec.ts
 # Runs the tests in debug mode
 npm run test:e2e -- --debug
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Lint with oxlint + [ESLint](https://eslint.org/)
 
 ```sh
 npm run lint
+```
+
+### Format with [Prettier](https://prettier.io/)
+
+```sh
+npm run format
 ```
