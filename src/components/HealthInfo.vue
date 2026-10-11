@@ -1,9 +1,5 @@
 <script setup lang="ts">
-interface HealthData {
-  status: string
-  version: string
-  uptime_seconds: number
-}
+import type { HealthData } from '@/api/health'
 
 defineProps<{
   health?: HealthData | null
@@ -38,7 +34,7 @@ const formatUptime = (seconds: number) => {
 
     <p class="connection-state" :class="{ available: health }" role="status">
       <span class="status-indicator" aria-hidden="true"></span>
-      {{ health ? 'Service erreichbar' : 'API noch nicht verbunden' }}
+      {{ health ? 'Service available' : 'API not connected' }}
     </p>
 
     <dl class="health-details">
@@ -51,7 +47,7 @@ const formatUptime = (seconds: number) => {
         <dd>{{ health?.version ?? '—' }}</dd>
       </div>
       <div class="health-row">
-        <dt>Laufzeit</dt>
+        <dt>Uptime</dt>
         <dd>{{ health ? formatUptime(health.uptime_seconds) : '—' }}</dd>
       </div>
     </dl>
