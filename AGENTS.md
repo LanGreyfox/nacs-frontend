@@ -24,6 +24,7 @@ Verify changes with `npm run type-check`, `npm run test:unit -- run`, and `npm r
 - **HTTP**: native `fetch`, no axios. API modules live in `src/api/`, with their types defined directly in the module (e.g. `HealthData` in `src/api/health.ts`).
 - **Import alias**: `@/` maps to `src/` (configured in `vite.config.ts` + `tsconfig.app.json`).
 - **Structure**: composables in `src/composables/`, Pinia stores in `src/stores/`, routes in `src/router/`, views in `src/views/`, reusable components in `src/components/`.
+- **Authentication**: the backend needs Basic Auth. `useAuthStore` (`src/stores/auth.ts`) stores username/password in `sessionStorage`; the `beforeEach` guard in `src/router/index.ts` sends unauthenticated users to `login`. Credentials are not yet verified or attached to API calls (planned).
 - **Backend**: dev API at `http://10.0.0.178:3000` (`.env.development`); `GET /health` returns `{ status, version, uptime_seconds }`.
 
 ## Testing
@@ -33,4 +34,5 @@ Verify changes with `npm run type-check`, `npm run test:unit -- run`, and `npm r
 - Mock `fetch` via `vi.stubGlobal`. The oxlint rule `vitest/require-mock-type-parameters` requires type parameters on `vi.fn()`, e.g. `vi.fn<typeof fetch>()`; cast partial Response mocks with `as Response`.
 - Lifecycle-dependent composables: mount a host component with `defineComponent` + `h()` render (no `template:` string — Vite uses the runtime-only build without a compiler) via @vue/test-utils.
 - Fake timers: `vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })` — leave `setImmediate` real, otherwise `flushPromises()` hangs.
+- Router guard tests: `vi.resetModules()` + dynamic import of `@/router`, with a fresh Pinia via `setActivePinia(createPinia())` and the view components mocked (see `src/router/__tests__/index.spec.ts`).
 - Mock modules in composable/view tests via `vi.mock('@/api/health', ...)` or `vi.mock('@/composables/useHealth', ...)`; use `vi.mocked()` for type safety.
