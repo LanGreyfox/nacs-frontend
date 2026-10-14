@@ -38,6 +38,12 @@ const response = await fetch(`${env.apiBaseUrl}/health`)
 
 Missing or empty required variables throw an error at app startup. Local overrides and secrets belong in `.env.*.local` files, which are gitignored.
 
+## Authentication
+
+The API requires Basic Authentication. Users sign in on `/login` (`src/views/LoginView.vue`); the credentials are kept in `sessionStorage` by the auth store (`src/stores/auth.ts`) and are cleared when the tab is closed. A router guard in `src/router/index.ts` redirects unauthenticated users to `/login` and authenticated users away from it.
+
+The credentials are not yet verified against the API and not yet sent with API calls.
+
 ## Project Setup
 
 ```sh
