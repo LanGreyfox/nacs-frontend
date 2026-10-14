@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
@@ -10,6 +11,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
@@ -18,6 +24,15 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
   ],
+})
+
+router.beforeEach((to) => {
+  const { isAuthenticated } = useAuthStore()
+
+  if (to.name === 'login') {
+    return isAuthenticated ? { name: 'home' } : true
+  }
+  return isAuthenticated ? true : { name: 'login' }
 })
 
 export default router
