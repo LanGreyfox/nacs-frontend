@@ -24,7 +24,7 @@ Verify changes with `npm run type-check`, `npm run test:unit -- run`, and `npm r
 - **HTTP**: native `fetch`, no axios. API modules live in `src/api/`, with their types defined directly in the module (e.g. `HealthData` in `src/api/health.ts`).
 - **Import alias**: `@/` maps to `src/` (configured in `vite.config.ts` + `tsconfig.app.json`).
 - **Structure**: composables in `src/composables/`, Pinia stores in `src/stores/`, routes in `src/router/`, views in `src/views/`, reusable components in `src/components/`.
-- **Authentication**: the backend needs Basic Auth. `useAuthStore` (`src/stores/auth.ts`) stores username/password in `sessionStorage`; the `beforeEach` guard in `src/router/index.ts` sends unauthenticated users to `login`. Credentials are not yet verified or attached to API calls (planned).
+- **Authentication**: the backend needs Basic Auth. `useAuthStore` (`src/stores/auth.ts`) stores username/password in `sessionStorage`; the `beforeEach` guard in `src/router/index.ts` sends unauthenticated users to `login`. `LoginView` verifies credentials via `GET /api/v1/status` before storing them and redirecting home; `src/api/backend.ts` attaches Basic Auth to `/api/v1/*` calls.
 - **Backend**: dev API at `http://10.0.0.178:3000` (`.env.development`); `GET /health` returns `{ status, version, uptime_seconds }`.
 
 ## Testing

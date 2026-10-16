@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { fetchStatus, HttpError } from '@/api/backend'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
@@ -9,8 +10,21 @@ const router = useRouter()
 
 const username = ref('')
 const password = ref('')
+const error = ref<string | null>(null)
+const submitting = ref(false)
 
 async function onSubmit() {
+  error.value = null
+  submitting.value = true
+  try {
+    await fetchStatus({ username: username.value, password: password.value })
+  } catch (e) {
+    error.value =
+      e instanceof HttpError && e.status === 401 ? 'Invalid credentials' : 'Backend unreachable'
+    return
+  } finally {
+    submitting.value = false
+  }
   auth.login(username.value, password.value)
   await router.push({ name: 'home' })
 }
@@ -34,7 +48,8 @@ async function onSubmit() {
           required
         />
       </label>
-      <button type="submit">Log in</button>
+      <p v-if="error" role="alert">{{ error }}</p>
+      <button type="submit" :disabled="submitting">Log in</button>
     </form>
   </main>
 </template>
