@@ -42,7 +42,17 @@ Missing or empty required variables throw an error at app startup. Local overrid
 
 The API requires Basic Authentication. Users sign in on `/login` (`src/views/LoginView.vue`); the credentials are kept in `sessionStorage` by the auth store (`src/stores/auth.ts`) and are cleared when the tab is closed. A router guard in `src/router/index.ts` redirects unauthenticated users to `/login` and authenticated users away from it.
 
-The credentials are not yet verified against the API and not yet sent with API calls.
+The login form verifies the credentials with `GET /api/v1/status` (`fetchStatus` in `src/api/backend.ts`). Only after a successful response are they stored and the user is redirected to the home view; otherwise an error is shown on the login page.
+
+`src/api/backend.ts` sends the stored credentials as a Basic `Authorization` header with every call to the authenticated endpoints:
+
+| Function | Endpoint | Parameters |
+| --- | --- | --- |
+| `fetchStatus` | `GET /api/v1/status` | none |
+| `fetchPeers` | `GET /api/v1/peers` | `limit`, `offset` |
+| `fetchFiles` | `GET /api/v1/files` | `limit`, `offset`, `kind`, `path_prefix` |
+
+Non-OK responses throw an `HttpError` carrying the HTTP `status`. The backend must allow the `Authorization` header via CORS for the frontend's origin.
 
 ## Project Setup
 
