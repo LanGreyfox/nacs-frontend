@@ -25,6 +25,7 @@ Verify changes with `npm run type-check`, `npm run test:unit -- run`, and `npm r
 - **Import alias**: `@/` maps to `src/` (configured in `vite.config.ts` + `tsconfig.app.json`).
 - **Structure**: composables in `src/composables/`, Pinia stores in `src/stores/`, routes in `src/router/`, views in `src/views/`, reusable components in `src/components/`.
 - **Authentication**: the backend needs Basic Auth. `useAuthStore` (`src/stores/auth.ts`) stores username/password in `sessionStorage`; the `beforeEach` guard in `src/router/index.ts` sends unauthenticated users to `login`. `LoginView` verifies credentials via `GET /api/v1/status` before storing them and redirecting home; `src/api/backend.ts` attaches Basic Auth to `/api/v1/*` calls.
+- **Home view polling**: `HomeView` renders `HealthInfo` (`useHealth` → `fetchHealth`) and `StatusInfo` (`useStatus` → `fetchStatus` from `src/api/backend.ts`). Both composables poll every 10 s via recursive `setTimeout` and set their data to `null` on errors.
 - **Backend**: dev API at `http://10.0.0.178:3000` (`.env.development`); `GET /health` returns `{ status, version, uptime_seconds }`.
 
 ## Testing
@@ -35,4 +36,4 @@ Verify changes with `npm run type-check`, `npm run test:unit -- run`, and `npm r
 - Lifecycle-dependent composables: mount a host component with `defineComponent` + `h()` render (no `template:` string — Vite uses the runtime-only build without a compiler) via @vue/test-utils.
 - Fake timers: `vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })` — leave `setImmediate` real, otherwise `flushPromises()` hangs.
 - Router guard tests: `vi.resetModules()` + dynamic import of `@/router`, with a fresh Pinia via `setActivePinia(createPinia())` and the view components mocked (see `src/router/__tests__/index.spec.ts`).
-- Mock modules in composable/view tests via `vi.mock('@/api/health', ...)` or `vi.mock('@/composables/useHealth', ...)`; use `vi.mocked()` for type safety.
+- Mock modules in composable/view tests via `vi.mock('@/api/health', ...)` `vi.mock('@/api/backend', ...)`, or `vi.mock('@/composables/useHealth', ...)` / `useStatus`; use `vi.mocked()` for type safety.

@@ -54,6 +54,10 @@ The login form verifies the credentials with `GET /api/v1/status` (`fetchStatus`
 
 Non-OK responses throw an `HttpError` carrying the HTTP `status`. The backend must allow the `Authorization` header via CORS for the frontend's origin.
 
+## Home View
+
+The home view shows two cards that poll the backend every 10 seconds: `HealthInfo` (`GET /health`, via `useHealth`) and `StatusInfo` (`GET /api/v1/status`, via `useStatus`), which displays the sync state, queue length, connected peers and the current transfer. A failed request resets the corresponding card to its "unavailable" state.
+
 ## Project Setup
 
 ```sh
