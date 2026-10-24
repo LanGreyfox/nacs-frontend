@@ -25,7 +25,7 @@ Verify changes with `npm run type-check`, `npm run test:unit -- run`, and `npm r
 - **Import alias**: `@/` maps to `src/` (configured in `vite.config.ts` + `tsconfig.app.json`).
 - **Structure**: composables in `src/composables/`, Pinia stores in `src/stores/`, routes in `src/router/`, views in `src/views/`, reusable components in `src/components/`.
 - **Authentication**: the backend needs Basic Auth. `useAuthStore` (`src/stores/auth.ts`) stores username/password in `sessionStorage`; the `beforeEach` guard in `src/router/index.ts` sends unauthenticated users to `login`. `LoginView` verifies credentials via `GET /api/v1/status` before storing them and redirecting home; `src/api/backend.ts` attaches Basic Auth to `/api/v1/*` calls.
-- **Home view polling**: `HomeView` renders `HealthInfo` (`useHealth` → `fetchHealth`) and `StatusInfo` (`useStatus` → `fetchStatus` from `src/api/backend.ts`). Both composables poll every 10 s via recursive `setTimeout` and set their data to `null` on errors.
+- **Home view polling**: `HomeView` renders `HealthInfo` (`useHealth` → `fetchHealth`), `StatusInfo` and `PeersInfo` (`useStatus`/`usePeers` → `fetchStatus`/`fetchPeers` from `src/api/backend.ts`). All composables poll every 10 s via recursive `setTimeout` and set their data to `null` on errors. `PeersInfo` renders peers generically via `Object.entries` because the peer item fields are still unknown (`Peer = Record<string, unknown>`).
 - **Backend**: dev API at `http://10.0.0.178:3000` (`.env.development`); `GET /health` returns `{ status, version, uptime_seconds }`.
 
 ## Testing

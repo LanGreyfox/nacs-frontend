@@ -17,12 +17,12 @@ Frontend for the **Network Attached Client Storage (NACS)** — a single-page ap
 
 Environment-specific configuration is provided via Vite [env files and modes](https://vite.dev/guide/env-and-mode). Only variables prefixed with `VITE_` are exposed to the client bundle.
 
-| File | Loaded when | Committed |
-| --- | --- | --- |
-| `.env.development` | `npm run dev` | yes |
-| `.env.production` | `npm run build` / `npm run preview` | yes |
-| `.env.development.local` / `.env.production.local` | same mode, overrides the above | no (gitignored) |
-| `.env.example` | template documenting all variables | yes |
+| File                                               | Loaded when                         | Committed       |
+| -------------------------------------------------- | ----------------------------------- | --------------- |
+| `.env.development`                                 | `npm run dev`                       | yes             |
+| `.env.production`                                  | `npm run build` / `npm run preview` | yes             |
+| `.env.development.local` / `.env.production.local` | same mode, overrides the above      | no (gitignored) |
+| `.env.example`                                     | template documenting all variables  | yes             |
 
 Available variables:
 
@@ -46,17 +46,19 @@ The login form verifies the credentials with `GET /api/v1/status` (`fetchStatus`
 
 `src/api/backend.ts` sends the stored credentials as a Basic `Authorization` header with every call to the authenticated endpoints:
 
-| Function | Endpoint | Parameters |
-| --- | --- | --- |
-| `fetchStatus` | `GET /api/v1/status` | none |
-| `fetchPeers` | `GET /api/v1/peers` | `limit`, `offset` |
-| `fetchFiles` | `GET /api/v1/files` | `limit`, `offset`, `kind`, `path_prefix` |
+| Function      | Endpoint             | Parameters                               |
+| ------------- | -------------------- | ---------------------------------------- |
+| `fetchStatus` | `GET /api/v1/status` | none                                     |
+| `fetchPeers`  | `GET /api/v1/peers`  | `limit`, `offset`                        |
+| `fetchFiles`  | `GET /api/v1/files`  | `limit`, `offset`, `kind`, `path_prefix` |
 
 Non-OK responses throw an `HttpError` carrying the HTTP `status`. The backend must allow the `Authorization` header via CORS for the frontend's origin.
 
 ## Home View
 
-The home view shows two cards that poll the backend every 10 seconds: `HealthInfo` (`GET /health`, via `useHealth`) and `StatusInfo` (`GET /api/v1/status`, via `useStatus`), which displays the sync state, queue length, connected peers and the current transfer. A failed request resets the corresponding card to its "unavailable" state.
+The home view shows three cards that poll the backend every 10 seconds: `HealthInfo` (`GET /health`, via `useHealth`), `StatusInfo` (`GET /api/v1/status`, via `useStatus`), which displays the sync state, queue length, connected peers and the current transfer, and `PeersInfo` (`GET /api/v1/peers`, via `usePeers`), which lists the connected peers with a `shown of total` counter. A failed request resets the corresponding card to its "unavailable" state.
+
+The peer item fields are not known yet (only empty lists have been observed), so `Peer` is typed as `Record<string, unknown>` and `PeersInfo` renders each peer generically as key-value rows. Once the backend returns real peer objects, their fields appear automatically.
 
 ## Project Setup
 
