@@ -60,6 +60,8 @@ The home view shows three cards that poll the backend every 10 seconds: `HealthI
 
 The peer item fields are not known yet (only empty lists have been observed), so `Peer` is typed as `Record<string, unknown>` and `PeersInfo` renders each peer generically as key-value rows. Once the backend returns real peer objects, their fields appear automatically.
 
+Below these cards, `FilesInfo` (`GET /api/v1/files`, via `useFiles`) shows the files and folders as a collapsible tree. The tree is built from the flat resource `path` values (`buildFileTree` in `src/utils/fileTree.ts`); folders are listed before files. Files are loaded in pages of 200 (the backend caps `limit` at 1000): further pages are fetched on demand when the "Loading more files…" marker at the end of the list scrolls into view (continuous scrolling). Each 10 s poll reloads at least as many entries as are already loaded.
+
 ## Project Setup
 
 ```sh
