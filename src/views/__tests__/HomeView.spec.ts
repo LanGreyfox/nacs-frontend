@@ -2,16 +2,21 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
-import type { PeersData, StatusData } from '@/api/backend'
+import type { FilesData, PeersData, StatusData } from '@/api/backend'
 import type { HealthData } from '@/api/health'
+import FilesInfo from '@/components/FilesInfo.vue'
 import HealthInfo from '@/components/HealthInfo.vue'
 import PeersInfo from '@/components/PeersInfo.vue'
 import StatusInfo from '@/components/StatusInfo.vue'
+import { useFiles } from '@/composables/useFiles'
 import { useHealth } from '@/composables/useHealth'
 import { usePeers } from '@/composables/usePeers'
 import { useStatus } from '@/composables/useStatus'
 import HomeView from '@/views/HomeView.vue'
 
+vi.mock('@/composables/useFiles', () => ({
+  useFiles: vi.fn<typeof useFiles>(),
+}))
 vi.mock('@/composables/useHealth', () => ({
   useHealth: vi.fn<typeof useHealth>(),
 }))
@@ -32,11 +37,22 @@ const peersFixture: PeersData = {
   pagination: { limit: 100, offset: 0, total: 1, has_more: false },
 }
 
+const filesFixture: FilesData = {
+  resources: [],
+  tombstones: [],
+  pagination: { limit: 100, offset: 0, total: 0, has_more: false },
+}
+
 function mockComposables(
   health: HealthData | null,
   status: StatusData | null,
   peers: PeersData | null,
+  files: FilesData | null = null,
 ) {
+  vi.mocked(useFiles).mockReturnValue({
+    files: ref<FilesData | null>(files),
+    loadMore: vi.fn<() => Promise<void>>(),
+  })
   vi.mocked(useHealth).mockReturnValue({ health: ref<HealthData | null>(health) })
   vi.mocked(useStatus).mockReturnValue({ status: ref<StatusData | null>(status) })
   vi.mocked(usePeers).mockReturnValue({ peers: ref<PeersData | null>(peers) })
@@ -89,5 +105,21 @@ describe('HomeView', () => {
     const wrapper = mount(HomeView)
 
     expect(wrapper.findComponent(PeersInfo).props('peers')).toBeNull()
+  })
+
+  it('passes the polled files data to FilesInfo', () => {
+    mockComposables(healthFixture, statusFixture, peersFixture, filesFixture)
+
+    const wrapper = mount(HomeView)
+
+    expect(wrapper.findComponent(FilesInfo).props('files')).toEqual(filesFixture)
+  })
+
+  it('passes null to FilesInfo while no data is available', () => {
+    mockComposables(null, null, null)
+
+    const wrapper = mount(HomeView)
+
+    expect(wrapper.findComponent(FilesInfo).props('files')).toBeNull()
   })
 })
