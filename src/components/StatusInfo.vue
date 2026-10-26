@@ -77,10 +77,6 @@ const progressPercent = (progress: number, total: number) =>
 
 <style scoped>
 .status-info {
-  position: fixed;
-  top: 1.5rem;
-  left: 1.5rem;
-  width: min(24rem, calc(100vw - 3rem));
   margin: 0;
   padding: 1.5rem;
   border: 1px solid var(--color-border);
