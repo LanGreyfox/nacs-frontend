@@ -26,11 +26,12 @@ const { status } = useStatus()
 <style scoped>
 /* The three cards above are position: fixed, so reserve their height. */
 main {
-  /* Break out of the width-limited #app grid to span the viewport. */
-  grid-column: 1 / -1;
+  /* Positioned against the viewport so the left inset matches the fixed cards. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   box-sizing: border-box;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  padding: 22rem 1.5rem 1.5rem;
+  padding: 24rem 1.5rem 1.5rem;
 }
 </style>
