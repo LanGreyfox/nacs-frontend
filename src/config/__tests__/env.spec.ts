@@ -13,6 +13,7 @@ describe('env config', () => {
   })
 
   it('exposes the API base URL from VITE_API_BASE_URL', async () => {
+    vi.stubEnv('PROD', false)
     vi.stubEnv('VITE_API_BASE_URL', 'http://10.0.0.178:3000')
 
     const { env } = await importEnvModule()
@@ -21,18 +22,21 @@ describe('env config', () => {
   })
 
   it('throws a descriptive error when VITE_API_BASE_URL is missing', async () => {
+    vi.stubEnv('PROD', false)
     vi.stubEnv('VITE_API_BASE_URL', undefined)
 
     await expect(importEnvModule()).rejects.toThrow('VITE_API_BASE_URL')
   })
 
   it('throws a descriptive error when VITE_API_BASE_URL is empty', async () => {
+    vi.stubEnv('PROD', false)
     vi.stubEnv('VITE_API_BASE_URL', '   ')
 
     await expect(importEnvModule()).rejects.toThrow('VITE_API_BASE_URL')
   })
 
   it('exposes the Vite mode flags', async () => {
+    vi.stubEnv('PROD', false)
     vi.stubEnv('VITE_API_BASE_URL', 'http://10.0.0.178:3000')
 
     const { env } = await importEnvModule()
@@ -43,10 +47,20 @@ describe('env config', () => {
   })
 
   it('returns a frozen env object', async () => {
+    vi.stubEnv('PROD', false)
     vi.stubEnv('VITE_API_BASE_URL', 'http://10.0.0.178:3000')
 
     const { env } = await importEnvModule()
 
     expect(Object.isFrozen(env)).toBe(true)
+  })
+
+  it('uses the current page origin in production without requiring VITE_API_BASE_URL', async () => {
+    vi.stubEnv('PROD', true)
+    vi.stubEnv('VITE_API_BASE_URL', undefined)
+
+    const { env } = await importEnvModule()
+
+    expect(env.apiBaseUrl).toBe(window.location.origin)
   })
 })

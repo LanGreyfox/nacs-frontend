@@ -1,6 +1,6 @@
 # NACS Frontend
 
-Frontend for the **Network Attached Client Storage (NACS)** — a single-page application built with Vue 3, Vite and TypeScript. It communicates with the NACS backend API, whose base URL is provided via environment variables (see below).
+Frontend for the **Network Attached Client Storage (NACS)** — a single-page application built with Vue 3, Vite and TypeScript. It communicates with the NACS backend API; in production, the API is served from the same origin as the frontend.
 
 ## Tech Stack
 
@@ -26,7 +26,7 @@ Environment-specific configuration is provided via Vite [env files and modes](ht
 
 Available variables:
 
-- `VITE_API_BASE_URL` (required): base URL of the NACS backend API. Local development points to `http://10.0.0.178:3000` (see `.env.development`).
+- `VITE_API_BASE_URL` (development only): base URL of the NACS backend API. Local development points to `http://10.0.0.178:3000` (see `.env.development`). Production uses the current page's protocol, host, and port, so no API URL needs to be configured there.
 
 Access variables in code only through the typed config module, never via `import.meta.env` directly:
 
@@ -36,7 +36,7 @@ import { env } from '@/config/env'
 const response = await fetch(`${env.apiBaseUrl}/health`)
 ```
 
-Missing or empty required variables throw an error at app startup. Local overrides and secrets belong in `.env.*.local` files, which are gitignored.
+In development, a missing or empty `VITE_API_BASE_URL` throws an error at app startup. Local overrides and secrets belong in `.env.*.local` files, which are gitignored.
 
 ## Authentication
 

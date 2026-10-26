@@ -2,7 +2,8 @@
  * Client for the backend `GET /health` endpoint.
  *
  * The base URL comes from the central env module (see `src/config/env.ts`),
- * which fails fast at app startup when `VITE_API_BASE_URL` is missing.
+ * which requires `VITE_API_BASE_URL` in development and uses the current page
+ * origin in production.
  */
 
 import { env } from '@/config/env'
