@@ -56,10 +56,6 @@ const formatUptime = (seconds: number) => {
 
 <style scoped>
 .health-info {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: min(24rem, calc(100vw - 3rem));
   margin: 0;
   padding: 1.5rem;
   border: 1px solid var(--color-border);

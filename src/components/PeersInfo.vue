@@ -50,11 +50,6 @@ const formatValue = (value: unknown): string => (value === null ? '—' : String
 
 <style scoped>
 .peers-info {
-  position: fixed;
-  top: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(24rem, calc(100vw - 3rem));
   margin: 0;
   padding: 1.5rem;
   border: 1px solid var(--color-border);
