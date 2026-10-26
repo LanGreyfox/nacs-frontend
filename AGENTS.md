@@ -20,7 +20,7 @@ Verify changes with `npm run type-check`, `npm run test:unit -- run`, and `npm r
 
 ## Conventions
 
-- **Environment access**: only via the typed config module `src/config/env.ts` (`env.apiBaseUrl`) — never `import.meta.env` directly. It validates fail-fast at import time; `VITE_API_BASE_URL` is required.
+- **Environment access**: only via the typed config module `src/config/env.ts` (`env.apiBaseUrl`) — never `import.meta.env` directly. It validates fail-fast at import time; `VITE_API_BASE_URL` is required in development, while production uses the current page origin.
 - **HTTP**: native `fetch`, no axios. API modules live in `src/api/`, with their types defined directly in the module (e.g. `HealthData` in `src/api/health.ts`).
 - **Import alias**: `@/` maps to `src/` (configured in `vite.config.ts` + `tsconfig.app.json`).
 - **Structure**: composables in `src/composables/`, Pinia stores in `src/stores/`, routes in `src/router/`, views in `src/views/`, reusable components in `src/components/`.

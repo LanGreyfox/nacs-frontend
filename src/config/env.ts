@@ -20,8 +20,10 @@ function requireEnv(key: string, value: string | undefined): string {
 }
 
 export const env = Object.freeze({
-  /** Base URL of the backend API, e.g. "http://localhost:8080" */
-  apiBaseUrl: requireEnv('VITE_API_BASE_URL', import.meta.env.VITE_API_BASE_URL),
+  /** Base URL of the backend API. Production uses the current page origin. */
+  apiBaseUrl: import.meta.env.PROD
+    ? window.location.origin
+    : requireEnv('VITE_API_BASE_URL', import.meta.env.VITE_API_BASE_URL),
   /** Current Vite mode, e.g. "development" or "production" */
   mode: import.meta.env.MODE,
   /** True when running in a non-production build */
