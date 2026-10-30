@@ -19,6 +19,8 @@ const formatBytes = (bytes: number) => {
 
 const progressPercent = (progress: number, total: number) =>
   total > 0 ? Math.min(100, Math.round((progress / total) * 100)) : 0
+
+const peerIdChunks = (peerId: string) => peerId.match(/.{1,12}/g) ?? []
 </script>
 
 <template>
@@ -56,7 +58,15 @@ const progressPercent = (progress: number, total: number) =>
       <p class="transfer-path">{{ status.sync.current_transfer.path }}</p>
       <p class="transfer-meta">
         {{ status.sync.current_transfer.event_kind }} · peer
-        {{ status.sync.current_transfer.peer_id }} · {{ status.sync.current_transfer.username }}
+        <span class="peer-id">
+          <template
+            v-for="(chunk, index) in peerIdChunks(status.sync.current_transfer.peer_id)"
+            :key="index"
+          >
+            <wbr v-if="index > 0" />{{ chunk }}
+          </template>
+        </span>
+        · {{ status.sync.current_transfer.username }}
       </p>
       <progress
         :value="status.sync.current_transfer.progress_bytes"
