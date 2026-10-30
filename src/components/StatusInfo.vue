@@ -171,6 +171,7 @@ dd {
 .transfer-meta {
   color: var(--color-text);
   font-size: 0.875rem;
+  overflow-wrap: anywhere;
 }
 
 progress {
