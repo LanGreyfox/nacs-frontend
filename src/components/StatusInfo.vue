@@ -59,7 +59,10 @@ const peerIdChunks = (peerId: string) => peerId.match(/.{1,12}/g) ?? []
       <p class="transfer-meta">
         {{ status.sync.current_transfer.event_kind }} · peer
         <span class="peer-id">
-          <template v-for="(chunk, index) in peerIdChunks(status.sync.current_transfer.peer_id)" :key="index">
+          <template
+            v-for="(chunk, index) in peerIdChunks(status.sync.current_transfer.peer_id)"
+            :key="index"
+          >
             <wbr v-if="index > 0" />{{ chunk }}
           </template>
         </span>
